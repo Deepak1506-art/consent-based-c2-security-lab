@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Simulated endpoints</h1>
+<section class="panel"><div class="table-wrap"><table>
+<tr><th>Client ID</th><th>Hostname</th><th>Operating system</th><th>Simulated status</th><th>Scope</th></tr>
+{% for c in clients %}<tr><td>{{ c.client_id }}</td><td>{{ c.hostname }}</td><td>{{ c.platform }}</td>
+<td><span class="pill {{ c.status|lower }}">{{ c.status }}</span></td><td>{{ c.consent }}</td></tr>{% endfor %}
+</table></div></section>
+{% endblock %}

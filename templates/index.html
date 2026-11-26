@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Command & Control Behaviour Dashboard</h1>
+<p class="muted">A local dashboard for learning endpoint inventory, event telemetry and defensive triage.</p>
+<section class="stats">
+  <div class="stat"><span>Lab endpoints</span><strong>{{ stats.endpoints }}</strong></div>
+  <div class="stat"><span>Online (simulated)</span><strong>{{ stats.online }}</strong></div>
+  <div class="stat"><span>Total events</span><strong>{{ stats.events }}</strong></div>
+  <div class="stat"><span>High / critical</span><strong>{{ stats.high }}</strong></div>
+</section>
+<section class="panel">
+  <div class="panel-head"><h2>Endpoint inventory</h2>
+    <form method="post" action="{{ url_for('demo_all') }}"><button>Generate demo telemetry for all</button></form>
+  </div>
+  <div class="table-wrap"><table>
+    <tr><th>ID</th><th>Hostname</th><th>Platform</th><th>Status</th><th>Action</th></tr>
+    {% for c in clients %}
+    <tr><td>{{ c.client_id }}</td><td>{{ c.hostname }}</td><td>{{ c.platform }}</td>
+      <td><span class="pill {{ c.status|lower }}">{{ c.status }}</span></td>
+      <td><form method="post" action="{{ url_for('demo', client_id=c.client_id) }}"><button class="secondary">Add sample events</button></form></td></tr>
+    {% endfor %}
+  </table></div>
+</section>
+<section class="panel">
+  <div class="panel-head"><h2>Recent telemetry</h2><a href="{{ url_for('events') }}">View all →</a></div>
+  {% if events %}
+  <div class="table-wrap"><table>
+    <tr><th>Time (UTC)</th><th>Endpoint</th><th>Event</th><th>Severity</th></tr>
+    {% for e in events %}
+    <tr><td>{{ e.timestamp }}</td><td>{{ e.client_id }}</td><td>{{ e.event_type }}</td>
+      <td><span class="severity {{ e.severity|lower }}">{{ e.severity }}</span></td></tr>
+    {% endfor %}
+  </table></div>
+  {% else %}<p class="muted">No events yet. Generate sample telemetry to explore the dashboard.</p>{% endif %}
+</section>
+<section class="panel actions">
+  <h2>Lab maintenance</h2>
+  <a class="button secondary" href="{{ url_for('export_csv') }}">Export events as CSV</a>
+  <form method="post" action="{{ url_for('reset') }}" onsubmit="return confirm('Reset all lab event data?')"><button class="danger">Reset lab data</button></form>
+</section>
+{% endblock %}

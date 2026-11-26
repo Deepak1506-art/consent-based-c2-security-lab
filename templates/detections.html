@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Defensive detection findings</h1>
+<p class="muted">Rule-based triage recommendations generated from synthetic lab telemetry.</p>
+<section class="panel"><div class="table-wrap"><table>
+<tr><th>Priority</th><th>Endpoint</th><th>Indicator</th><th>Recommended defensive action</th></tr>
+{% for d in detections %}<tr><td><span class="severity {{ d.priority|lower }}">{{ d.priority }}</span></td>
+<td>{{ d.client_id }}</td><td>{{ d.event_type }}</td><td>{{ d.recommended_action }}</td></tr>
+{% else %}<tr><td colspan="4">No findings yet. Generate sample telemetry from the dashboard.</td></tr>{% endfor %}
+</table></div></section>
+{% endblock %}
